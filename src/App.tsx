@@ -1,10 +1,12 @@
 import './styles/main.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect} from 'react'
 import logoImg from './assets/logo_nlw.svg'
 import { GameBanner } from './components/GameBanner'
 import { AdBanner } from './components/AdBanner'
 import * as Dialog from '@radix-ui/react-dialog'
-import  Axios  from 'axios'
+import { loadGames } from './utils/load-games'
+import { useKeenSlider, KeenSliderPlugin } from "keen-slider/react"
+import "keen-slider/keen-slider.min.css"
 
 import { AdModal } from './components/AdModal'
 
@@ -18,43 +20,52 @@ interface Game {
   }
 }
 
+const MutationPlugin: KeenSliderPlugin = (slider) => {
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      slider.update()
+    })
+  })
+  const config = { childList: true }
+
+  slider.on("created", () => {
+    observer.observe(slider.container, config)
+  })
+  slider.on("destroyed", () => {
+    observer.disconnect()
+  })
+}
+
 function App() {
   const [games, setGames] = useState<Game[]>([])
+  const [ref] = useKeenSlider<HTMLDivElement>({
+    mode: "free-snap",
+    slides: {
+      perView: 5,
+      spacing: 15,
+    },
+    
+  }, [MutationPlugin])
+  
+  const handleLoadGames = async (page:number, gamesPerPage:number) => {
+    const gamesAndAds = await loadGames(page, gamesPerPage);
+    setGames(gamesAndAds)
+  };
 
   useEffect(() => {
-    const options = {
-      method: 'GET',
-      url: 'https://rawg-video-games-database.p.rapidapi.com/games',
-      headers: {
-        'X-RapidAPI-Key': 'eb23abdb51msh2079a43f518c785p1acb5cjsndf049ad3f10b',
-        'X-RapidAPI-Host': 'rawg-video-games-database.p.rapidapi.com'
-      },
-      params: {
-        key: process.env.API_KEY,
-        page_size: 10,
-        page: 3,
-      }
-    };
-
-    Axios.request(options).then(function (response: { data: any }) {
-      console.log(response.data);
-    }).catch(function (error: any) {
-      console.error(error);
-    });
-    fetch('http://localhost:3333/games').then(response => response.json()).then(data => {
-      setGames(data)
-    })
+    handleLoadGames(1, 40)
   }, [])
+
   return (
     <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
       <img src={logoImg}></img>
 
       <h1 className='text-6xl text-white font-black mt-20'>Seu <span className='text-transparent bg-nlw-gradient bg-clip-text'>duo</span> está aqui.</h1>
 
-      <div className='grid grid-cols-6 gap-6 mt-16'>
-        {games.map(game => {
+      <div ref={ref} className='keen-slider mt-16'>
+        {games.map((game, index) => {
           return (
-            <GameBanner key={game.id} bannerUrl={game.bannerUrl} title={game.title} adsCount={game._count.ads} />
+            <GameBanner key={game.id} bannerUrl={game.bannerUrl} title={game.title} adsCount={game._count.ads} className={`keen-slider__slide number-slide${index+1}`}/>
           )
         })}
       </div>
