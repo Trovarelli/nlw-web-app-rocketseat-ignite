@@ -15,15 +15,16 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
       metacritic: '80,100'
     }
   };
-
+  // fetch(`http://localhost:3000/api/ads/getAds?gameId=120,150`).then((response) => response.json()).then((resp) => console.log('AAAAAAA', resp.getAdsDb))
   const gamesReturn = await Axios.request(gamesOptions).then(function (response: { data: any }) {
     const gamesResult = response.data.results
+
     const gamesIds = gamesResult.map((id: { id: number; }) => {
       return id.id
     })
-    const adsReturn = Axios.get(`https://aps-api-nlw.herokuapp.com/ads/${gamesIds.join(',')}`).then(function (response: { data: any }) {
+    const adsReturn = Axios.get(`https://aps-api-nlw.herokuapp.com/api/ads/getAds?gameId=${gamesIds.join(',')}`).then(function (response: { data: any }) {
       const gamesAndAds = gamesResult.map((game: { id: any; name: any; background_image: any }) => {
-          const adsOfGame = response.data.filter((ad: { gameId: any; }) => {
+          const adsOfGame = response.data.getAdsDb.filter((ad: { gameId: any; }) => {
             return ad.gameId === game.id
           })
           return {
