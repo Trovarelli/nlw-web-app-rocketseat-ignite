@@ -24,8 +24,8 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
     })
     const adsReturn = Axios.get(`https://aps-api-nlw.herokuapp.com/api/ads/getAds?gameId=${gamesIds.join(',')}`).then(function (response: { data: any }) {
       const gamesAndAds = gamesResult.map((game: { id: any; name: any; background_image: any }) => {
-          const adsOfGame = response.data.getAdsDb.filter((ad: { gameId: any; }) => {
-            return ad.gameId === game.id
+          const adsOfGame = response.data.getAdsDb.filter((ad: { t_gameId: any; }) => {
+            return ad.t_gameId === game.id
           })
           return {
             id: game.id,

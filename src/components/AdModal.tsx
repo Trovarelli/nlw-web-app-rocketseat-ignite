@@ -31,7 +31,7 @@ export function AdModal() {
         if(!data.name) return
 
         try {
-           await Axios.post(`http://localhost:3333/ads`, {
+           await Axios.post(`https://aps-api-nlw.herokuapp.com/api/ads/postAds`, {
                 gameId: Number(data.game),
                 name: data.name,
                 yearsPlaying: Number(data.yearsPlaying),
