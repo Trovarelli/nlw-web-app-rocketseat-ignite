@@ -18,9 +18,9 @@ export function AdModal() {
     const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
 
     useEffect(() => {
-        Axios('http://localhost:3333/games').then(response => {
-        setGames(response.data)
-        })
+      const games :any = window.sessionStorage.getItem("games")
+      setGames(JSON.parse(games))
+       
     }, [])
 
    async function handleCreatedAd(event: FormEvent) {
@@ -31,7 +31,8 @@ export function AdModal() {
         if(!data.name) return
 
         try {
-           await Axios.post(`http://localhost:3333/games/${data.game}/ads`, {
+           await Axios.post(`http://localhost:3333/ads`, {
+                gameId: Number(data.game),
                 name: data.name,
                 yearsPlaying: Number(data.yearsPlaying),
                 discord: data.discord,
