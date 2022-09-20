@@ -31,7 +31,7 @@ export function AdModal() {
         if(!data.name) return
 
         try {
-           await Axios.post(`https://aps-api-nlw.herokuapp.com/api/ads/postAds`, {
+           await Axios.post(`https://aps-api-nlw.herokuapp.com/api/anun/postAnuns`, {
                 gameId: Number(data.game),
                 name: data.name,
                 yearsPlaying: Number(data.yearsPlaying),
@@ -39,7 +39,7 @@ export function AdModal() {
                 weekDays: weekDays.map(Number),
                 hourStart: data.hourStart,
                 hourEnd: data.hourEnd,
-                useVoiceChannel
+                useVoiceChannel,
             })
             alert('cadastro realizado com sucesso')
         } catch(err) {
