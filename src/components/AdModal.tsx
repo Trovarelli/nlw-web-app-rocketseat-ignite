@@ -4,13 +4,13 @@ import * as Dialog from '@radix-ui/react-dialog'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import { useState, useEffect, FormEvent } from 'react'
-import Axios from 'axios'
+import { handleCreatedAd } from '../utils/createAdd'
 // import * as Select from '@radix-ui/react-select'
 
 interface Game {
     id: string,
     title: string,
-  }
+}
 
 export function AdModal() {
     const [games, setGames] = useState<Game[]>([])
@@ -22,30 +22,12 @@ export function AdModal() {
       setGames(JSON.parse(games))
        
     }, [])
-
-   async function handleCreatedAd(event: FormEvent) {
-        event.preventDefault()
-        const formData = new FormData(event.target as HTMLFormElement)
-        const data = Object.fromEntries(formData)
-
-        if(!data.name) return
-
-        try {
-           await Axios.post(`https://aps-api-nlw.herokuapp.com/api/anun/postAnuns`, {
-                gameId: Number(data.game),
-                name: data.name,
-                yearsPlaying: Number(data.yearsPlaying),
-                discord: data.discord,
-                weekDays: weekDays.map(Number),
-                hourStart: data.hourStart,
-                hourEnd: data.hourEnd,
-                useVoiceChannel,
-            })
-            alert('cadastro realizado com sucesso')
-        } catch(err) {
-            alert(err)
-        }
-    } 
+    useEffect(() => {
+      window.sessionStorage.setItem("weekDays", JSON.stringify(weekDays))
+    }, [weekDays])
+    useEffect(() => {
+      window.sessionStorage.setItem("useVoiceChannel", JSON.stringify(useVoiceChannel))
+    }, [useVoiceChannel])
     return (
         <Dialog.Portal>
             <Dialog.Overlay className='bg-black/60 inset-0 fixed'>
@@ -153,18 +135,14 @@ export function AdModal() {
                   </label>
 
                   <footer className='mt-4 flex justify-end gap-4'>
-                    <Dialog.Close>
-                      <button className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>Cancelar</button>
+                    <Dialog.Close className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>
+                     Cancelar
                     </Dialog.Close>
-                    <button className='bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600' type='submit'><GameController size={24}/> Encontrar duo</button>
+                    <button  className='bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600' type='submit'><GameController size={24}/> Encontrar duo</button>
                   </footer>
                 </form>
               </Dialog.Content>
             </Dialog.Overlay>
           </Dialog.Portal>
     )
-}
-
-function axios(arg0: string) {
-    throw new Error('Function not implemented.')
 }

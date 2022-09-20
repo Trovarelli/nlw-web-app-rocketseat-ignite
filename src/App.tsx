@@ -6,6 +6,7 @@ import { AdBanner } from './components/AdBanner'
 import * as Dialog from '@radix-ui/react-dialog'
 import { loadGames } from './utils/load-games'
 import { useKeenSlider, KeenSliderPlugin } from "keen-slider/react"
+import {responsiveCarousel} from './utils/responsiveCarousel'
 import "keen-slider/keen-slider.min.css"
 
 import { AdModal } from './components/AdModal'
@@ -54,7 +55,7 @@ function App() {
       setLoaded(true)
     },
     slides: {
-      perView: 5,
+      perView: responsiveCarousel(),
       spacing: 15,
     },
 
@@ -99,7 +100,7 @@ function App() {
               <div onClick={(e: any) =>
                 e.stopPropagation() || instanceRef.current?.next()
               }
-                className={`transition ease-in-out delay-200 text-white cursor-pointer ${currentSlide !== instanceRef.current.track.details.slides.length - 5 ? 'opacity-1' : 'opacity-0'} absolute flex justify-center items-center px-3 w-30 bg-arrow-gradient-right h-[100%] top-1/2 left-[98%]  transform -translate-x-1/2 -translate-y-1/2`}>
+                className={`transition ease-in-out delay-200 text-white cursor-pointer ${currentSlide !== instanceRef.current.track.details.slides.length - responsiveCarousel() ? 'opacity-1' : 'opacity-0'} absolute flex justify-center items-center px-3 w-30 bg-arrow-gradient-right h-[100%] top-1/2 left-[98%]  transform -translate-x-1/2 -translate-y-1/2`}>
                 <CaretDoubleRight size={32} weight="bold" />
               </div>
           </>
@@ -108,7 +109,7 @@ function App() {
 
       </div>
 
-      <Dialog.Root >
+      <Dialog.Root>
         <AdBanner />
         <AdModal />
       </Dialog.Root>
