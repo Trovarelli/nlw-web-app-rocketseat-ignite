@@ -19,7 +19,8 @@ interface Game {
   bannerUrl: string,
   _count: {
     ads: number
-  }
+  },
+  ads: []
 }
 
 const MutationPlugin: KeenSliderPlugin = (slider) => {

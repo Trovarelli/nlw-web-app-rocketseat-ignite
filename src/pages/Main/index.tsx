@@ -14,15 +14,14 @@ import "keen-slider/keen-slider.min.css"
 import { AdModal } from '../../components/AdModal'
 import { CaretDoubleLeft, CaretDoubleRight, MagnifyingGlassPlus } from 'phosphor-react'
 
-
-
 interface Game {
   id: string,
   title: string,
   bannerUrl: string,
   _count: {
     ads: number
-  }
+  },
+  ads: []
 }
 
 const MutationPlugin: KeenSliderPlugin = (slider) => {

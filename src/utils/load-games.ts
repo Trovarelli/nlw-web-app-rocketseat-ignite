@@ -33,7 +33,8 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
             bannerUrl: game.background_image,
             _count: {
               ads: adsOfGame.length
-            }
+            },
+            ads: adsOfGame
           }
       })
       return gamesAndAds;
