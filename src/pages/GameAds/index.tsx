@@ -1,11 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog'
+import { ArrowBendUpLeft, ArrowCircleLeft } from 'phosphor-react';
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { AdListBanner } from '../../components/AdListBanner';
 import { DiscordModal } from '../../components/DiscordModal';
 
 function GameAds() {
     const ref = useRef<HTMLButtonElement>(null);
+    const [discord, setDiscord] = useState('')
     const [openModal, setOpenModal] = useState!(false)
     const [ads, setAds] = useState([]);
     const [allAds, setAllAds] = useState([]);
@@ -37,15 +39,21 @@ function GameAds() {
         }, 200);
     };
 
-    const handleLetsPlay = () =>{
+    const handleLetsPlay = (discordProp: any) =>{
+        if(openModal === false) {
+            setDiscord(discordProp.target.id)
+        }
         setOpenModal(!openModal)
     }
     return (
         <>
             <Dialog.Root open={openModal}>
-                <DiscordModal click={handleLetsPlay}/>
+                <DiscordModal click={handleLetsPlay} discord={discord}/>
             </Dialog.Root>
             <div className="relative flex flex-col justify-center items-center text-white mt-8">
+                <Link to={'/'} className='d-flex justify-start w-full'>
+                    <div className='px-3 mb-5 ml-5 rounded-md py-1 cursor-pointer  flex items-center w-24'><ArrowBendUpLeft size={20} weight="bold" /><span className='ml-1 font-normal text-sm'>Voltar</span></div>
+                </Link>
                 <img className="object-none h-72 w-[90vw] rounded-lg" src={game[0].bannerUrl} />
                 <div className='w-[90vw] rounded-b-lg text-center pt-16 pb-4 px-4 bg-game-banner-gradient absolute bottom-0 left-1/2 transform -translate-x-1/2 '>
                     <strong className='font bold text-white block text-4xl'>{game[0].title}</strong>
@@ -58,8 +66,8 @@ function GameAds() {
                     {ads.map((ad: any) => {
                         return (<AdListBanner announcement={ad} click={handleLetsPlay} key={ad.t_id} />)
                     })}
-                </div> : <div className="mt-5 text-3xl font-semibold">Desculpe mas este jogo não possui anúncios ainda :(</div>}
-                <button ref={ref} onClick={loadMoreAds} className={`my-6 p-3 rounded bg-violet-500 hover:bg-violet-600 w-[90%] ${noMoreAds ? 'opacity-0' : ''}`}>Carregar mais anúncios</button>
+                </div> : <div className="mt-5 text-3xl font-semibold">Infelizmente este jogo não possui anúncios ainda :(</div>}
+                <button ref={ref} onClick={loadMoreAds} className={`my-8 p-3 rounded bg-violet-500 hover:bg-violet-600 w-[90%] ${noMoreAds ? 'opacity-0' : ''}`}>Carregar mais anúncios</button>
             </div>
         </>
     )

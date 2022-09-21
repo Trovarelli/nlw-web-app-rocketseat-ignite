@@ -26,7 +26,6 @@ interface Game {
 
 const MutationPlugin: KeenSliderPlugin = (slider) => {
   const observer = new MutationObserver(function (mutations) {
-    console.log(mutations)
     mutations.forEach(function (mutation) {
       slider.update()
     })
@@ -65,12 +64,11 @@ function Main() {
   
   const handleLoadGames = async (page: number, gamesPerPage: number) => {
     const gamesAndAds = await loadGames(page, gamesPerPage);
-    setGames(gamesAndAds)
+    setGames(gamesAndAds.sort((n1: { _count: { ads: number } } ,n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads))
   };
 
   useEffect(() => {
     const gamesSession = JSON.parse(window.sessionStorage.getItem("games")!)
-    console.log('SESSION', gamesSession)
     if (gamesSession !== null) {
       setGames(JSON.parse(window.sessionStorage.getItem("games")!))
     } else handleLoadGames(1, 10)

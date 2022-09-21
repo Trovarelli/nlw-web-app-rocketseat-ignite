@@ -5,7 +5,7 @@ import { GameController } from 'phosphor-react';
 
 export const AdListBanner = (props :any) => {
     return (
-        <div key={props.announcement.t_id} className="w-full h-auto px-4 bg-[#2A2634] rounded">
+        <div key={props.announcement.t_id} className="hover:scale-105 transition ease-in-out duration-75 w-full h-auto px-4 bg-[#2A2634] rounded">
             <div className="flex flex-col py-3">
                 <label className="font-light text-start text-sm">Nome</label>
                 <span className="font-semibold">{props.announcement.t_name}</span>
@@ -77,7 +77,7 @@ export const AdListBanner = (props :any) => {
                 <label className="font-light text-start text-sm">Usa chat de voz?</label>
                 <span className={`font-semibold ${props.announcement.t_useVoiceChannel ? 'text-emerald-400' : 'text-red-500'}`}>{props.announcement.t_useVoiceChannel ? 'Sim' : 'Não'}</span>
             </div>
-            <button onClick={props.click} className='bg-violet-500 justify-center mb-3 h-12 w-full rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600'><GameController size={24}/> Encontrar duo</button>
+            <button onClick={props.click} id={props.announcement.t_discord} className='bg-violet-500 justify-center mb-3 h-12 w-full rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600'><GameController id={props.announcement.t_discord} size={24}/> Encontrar duo</button>
         </div>
     )
 }

@@ -1,6 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { CheckCircle, XCircle } from 'phosphor-react';
+import { CheckCircle, CopySimple, XCircle } from 'phosphor-react';
 export const DiscordModal = (props: any) => {
+    const handleCopy = () => {
+        navigator.clipboard.writeText(props.discord)    
+    }
     return (
         <Dialog.Portal>
             <Dialog.Overlay className='bg-black/60 inset-0 fixed'>
@@ -12,7 +15,7 @@ export const DiscordModal = (props: any) => {
                     </Dialog.Title>
                     <div className=' font-thin'>Agora é só começar a jogar!</div>
                     <div className='font-semibold mt-6'>Adicione no Discord</div>
-                    <div className="mt-3 bg-zinc-900 py-3 text-xl text-center">exemplo#555</div>
+                    <div className="mt-3 bg-zinc-900 py-3 px-3 text-xl text-center rounded-md grid grid-cols-copy-discord"><span className='pl-7'>{props.discord}</span> <CopySimple size={32} weight="bold" className='cursor-pointer' onClick={handleCopy} /></div>
                 </Dialog.Content>
             </Dialog.Overlay>
         </Dialog.Portal>

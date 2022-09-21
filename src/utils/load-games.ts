@@ -15,7 +15,6 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
       metacritic: '80,100'
     }
   };
-  // fetch(`http://localhost:3000/api/ads/getAds?gameId=120,150`).then((response) => response.json()).then((resp) => console.log('AAAAAAA', resp.getAdsDb))
   const gamesReturn = await Axios.request(gamesOptions).then(function (response: { data: any }) {
     const gamesResult = response.data.results
 

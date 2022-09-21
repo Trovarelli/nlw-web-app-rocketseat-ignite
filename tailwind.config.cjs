@@ -10,7 +10,8 @@ module.exports = {
     },
     extend: {
       gridTemplateColumns: {
-        'games-grid': 'repeat(auto-fill, minmax(281px, 1fr))'
+        'games-grid': 'repeat(auto-fill, minmax(281px, 1fr))',
+        'copy-discord': '1fr 30px'
       },
       backgroundImage: {
         galaxy: "url('/background_galaxy.png')",
