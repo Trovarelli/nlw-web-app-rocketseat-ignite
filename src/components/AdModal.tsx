@@ -5,6 +5,9 @@ import * as Checkbox from '@radix-ui/react-checkbox'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import { useState, useEffect, FormEvent } from 'react'
 import { handleCreatedAd } from '../utils/createAdd'
+import { loadGames } from '../utils/load-games'
+
+
 // import * as Select from '@radix-ui/react-select'
 
 interface Game {
@@ -12,15 +15,22 @@ interface Game {
     title: string,
 }
 
+
+
 export function AdModal() {
     const [games, setGames] = useState<Game[]>([])
     const [weekDays, setWeekDays] = useState<string[]>([])
     const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
 
+    const handleLoadGames = async (page: number, gamesPerPage: number) => {
+      const gamesAndAds = await loadGames(page, gamesPerPage);
+      setGames(gamesAndAds)
+    };
     useEffect(() => {
-      const games :any = window.sessionStorage.getItem("games")
-      setGames(JSON.parse(games))
-       
+      const gamesSession = JSON.parse(window.sessionStorage.getItem("games")!)
+      if (gamesSession !== null) {
+        setGames(JSON.parse(window.sessionStorage.getItem("games")!))
+      } else handleLoadGames(1, 10)
     }, [])
     useEffect(() => {
       window.sessionStorage.setItem("weekDays", JSON.stringify(weekDays))

@@ -18,12 +18,15 @@
     "keen-slider": "^6.6.14",
     "phosphor-react": "^1.4.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.0"
   },
   "devDependencies": {
+    "@types/history": "^5.0.0",
     "@types/node": "^18.7.18",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.10",
     "postcss": "^8.4.16",
