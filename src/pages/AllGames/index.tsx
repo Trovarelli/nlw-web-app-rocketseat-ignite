@@ -1,6 +1,6 @@
 
 import { ArrowBendUpLeft } from "phosphor-react";
-import { Key, useEffect, useRef, useState } from "react";
+import { Key, useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom"
 import { GameBanner } from '../../components/GameBanner';
 import { loadGames } from "../../utils/load-games";
@@ -14,28 +14,33 @@ function AllGames() {
     const [page, setPage] = useState(0);
     const [gamesPerPage, setGamesPerPage] = useState(20);
 
+    const handleGames = useCallback(async (apiPage: any, gamesPerPage: any) => {
+        await loadGames(apiPage, gamesPerPage)
+        const gamesStore = JSON.parse(window.sessionStorage.getItem("games")!)
+        setAllGames(gamesStore)
+    }, [])
+
     useEffect(() => {
         setGames(allGames.slice(0, gamesPerPage).sort((n1: { _count: { ads: number } }, n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads));
-    }, [allGames]);
+    }, [handleGames, allGames]);
 
 
     const loadMoreGames = async () => {
-        const gamesStore = JSON.parse(window.sessionStorage.getItem("games")!)
-        if (gamesStore.length >= gamesPerPage) {
-            setPage(page + 1)
-            setGamesPerPage(gamesPerPage + 20)
-            setLoading(true)
-            await loadGames(apiPage + 1, 20).then(() => {
-                setAllGames(gamesStore)
-                setTimeout(() => {
-                    ref.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-                    setLoading(false)
-                }, 200);
-            })
-        } else {
-            setPage(page + 1)
-            setGamesPerPage(gamesPerPage + 20)
-        }
+        
+
+        setPage(page + 1)
+        setGamesPerPage(gamesPerPage + 20)
+        setLoading(true)
+        await handleGames(apiPage + 1, gamesPerPage).then(() => {
+            
+            console.log('ALLGAMES', allGames)
+            console.log('GAMES PER PAGE', gamesPerPage)
+            setTimeout(() => {
+                ref.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+                setLoading(false)
+            }, 200);
+        }).catch((err) => alert(err))
+
 
     };
     return (
