@@ -1,9 +1,15 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { CheckCircle, CopySimple, XCircle } from 'phosphor-react';
+import { CheckCircle, Check, CopySimple, XCircle } from 'phosphor-react';
+import { useState } from 'react';
 export const DiscordModal = (props: any) => {
     const handleCopy = () => {
-        navigator.clipboard.writeText(props.discord)    
+        setCopied(true)
+        navigator.clipboard.writeText(props.discord)
+        setTimeout(() => {
+            setCopied(false)
+        }, 6000)
     }
+    const [copied, setCopied] = useState(false)
     return (
         <Dialog.Portal>
             <Dialog.Overlay className='bg-black/60 inset-0 fixed'>
@@ -15,7 +21,11 @@ export const DiscordModal = (props: any) => {
                     </Dialog.Title>
                     <div className=' font-thin'>Agora é só começar a jogar!</div>
                     <div className='font-semibold mt-6'>Adicione no Discord</div>
-                    <div className="mt-3 bg-zinc-900 py-3 px-3 text-xl text-center rounded-md grid grid-cols-copy-discord"><span className='pl-7'>{props.discord}</span> <CopySimple size={32} weight="bold" className='cursor-pointer' onClick={handleCopy} /></div>
+                    <div className="mt-3 bg-zinc-900 py-3 px-3 text-xl text-center rounded-md grid grid-cols-copy-discord">
+                        <span className='pl-7'>{props.discord}</span> 
+                        {copied ? <Check size={32} weight="bold" name='Copiado' /> : <CopySimple size={32} weight="bold" name='Copiar' className='cursor-pointer' onClick={handleCopy} />}
+                    </div>
+                    <div className={`mt-2 font-light text-sm ${copied ? '' : 'opacity-0'} transition-opacity ease-in-out`}>Copiado para area de transferencia</div>
                 </Dialog.Content>
             </Dialog.Overlay>
         </Dialog.Portal>

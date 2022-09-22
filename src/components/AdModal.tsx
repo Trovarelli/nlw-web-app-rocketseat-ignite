@@ -5,33 +5,15 @@ import * as Checkbox from '@radix-ui/react-checkbox'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import { useState, useEffect, FormEvent } from 'react'
 import { handleCreatedAd } from '../utils/createAdd'
-import { loadGames } from '../utils/load-games'
 
 
 // import * as Select from '@radix-ui/react-select'
 
-interface Game {
-    id: string,
-    title: string,
-}
 
-
-
-export function AdModal() {
-    const [games, setGames] = useState<Game[]>([])
+export function AdModal(props: any) {
+  console.log(props)
     const [weekDays, setWeekDays] = useState<string[]>([])
     const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
-
-    const handleLoadGames = async (page: number, gamesPerPage: number) => {
-      const gamesAndAds = await loadGames(page, gamesPerPage);
-      setGames(gamesAndAds)
-    };
-    useEffect(() => {
-      const gamesSession = JSON.parse(window.sessionStorage.getItem("games")!)
-      if (gamesSession !== null) {
-        setGames(JSON.parse(window.sessionStorage.getItem("games")!))
-      } else handleLoadGames(1, 10)
-    }, [])
     useEffect(() => {
       window.sessionStorage.setItem("weekDays", JSON.stringify(weekDays))
     }, [weekDays])
@@ -48,7 +30,7 @@ export function AdModal() {
                     <label className='font-semibold text-start' htmlFor='game'>Qual o game?</label>
                     <select id='game' name='game' className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
                         <option disabled defaultValue="">Selecione o game que deseja jogar</option>
-                        {games.map(game => {
+                        {props.games.map(game => {
                             return(
                                 <option key={game.id} value={game.id}>{game.title}</option>
                             )

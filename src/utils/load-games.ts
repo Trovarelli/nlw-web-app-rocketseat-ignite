@@ -36,6 +36,24 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
             ads: adsOfGame
           }
       })
+      if(window.sessionStorage.getItem("games") !== null) {
+        window.sessionStorage.setItem("page", JSON.stringify(_page))
+
+        const gamesStorage = JSON.parse(window.sessionStorage.getItem("games")!)
+        
+        console.log('API CALL', gamesAndAds)
+        console.log('STORE', gamesStorage)
+        
+        gamesAndAds.forEach((element: any, index: string | number) => {
+          if(element.id !== gamesStorage[index].id) gamesStorage.push(element)
+        });
+        
+        window.sessionStorage.setItem("games", JSON.stringify(gamesStorage))
+        
+      } else {
+        window.sessionStorage.setItem("games", JSON.stringify(gamesAndAds))
+        window.sessionStorage.setItem("page", JSON.stringify(_page))
+      }
       return gamesAndAds;
     }).catch(function (error: any) {
       console.error(error);
@@ -46,7 +64,6 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
   }).catch(function (error: any) {
     console.error(error);
   });
-
-  window.sessionStorage.setItem("games", JSON.stringify(gamesReturn))
+  
   return gamesReturn;
 };
