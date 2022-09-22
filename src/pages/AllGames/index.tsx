@@ -15,7 +15,7 @@ function AllGames() {
     const [gamesPerPage, setGamesPerPage] = useState(20);
 
     useEffect(() => {
-        setGames(allGames.slice(page, gamesPerPage));
+        setGames(allGames.slice(0, gamesPerPage).sort((n1: { _count: { ads: number } }, n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads));
     }, [allGames]);
 
 
