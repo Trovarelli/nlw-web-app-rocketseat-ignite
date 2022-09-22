@@ -41,9 +41,6 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
 
         const gamesStorage = JSON.parse(window.sessionStorage.getItem("games")!)
         
-        console.log('API CALL', gamesAndAds)
-        console.log('STORE', gamesStorage)
-        
         gamesAndAds.forEach((element: any, index: string | number) => {
           if(element.id !== gamesStorage[index].id) gamesStorage.push(element)
         });
