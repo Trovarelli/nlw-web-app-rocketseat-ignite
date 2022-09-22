@@ -45,6 +45,7 @@ const MutationPlugin: KeenSliderPlugin = (slider) => {
 function Main() {
   const gamesLoading = [1, 2, 3, 4]
   const [games, setGames] = useState<Game[]>([])
+  const [allGames] = useState(JSON.parse(window.sessionStorage.getItem("games")!))
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [ref, instanceRef] = useKeenSlider<HTMLDivElement>({
@@ -122,7 +123,7 @@ function Main() {
 
         <Dialog.Root>
           <AdBanner />
-          <AdModal games={games}/>
+          <AdModal games={allGames}/>
         </Dialog.Root>
 
       </div>
