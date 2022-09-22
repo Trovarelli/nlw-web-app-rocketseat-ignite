@@ -30,7 +30,7 @@ export function AdModal(props: any) {
                     <label className='font-semibold text-start' htmlFor='game'>Qual o game?</label>
                     <select id='game' name='game' className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
                         <option disabled defaultValue="">Selecione o game que deseja jogar</option>
-                        {props.games.map(game => {
+                        {props.games.map((game: any) => {
                             return(
                                 <option key={game.id} value={game.id}>{game.title}</option>
                             )
