@@ -1,34 +1,63 @@
 import { Check, GameController } from 'phosphor-react'
-import { Input } from './Form/input'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
 import { useState, useEffect, FormEvent } from 'react'
 import { handleCreatedAd } from '../utils/createAdd'
+import { useForm, useFormState } from 'react-hook-form'
 
 
 // import * as Select from '@radix-ui/react-select'
 
-
 export function AdModal(props: any) {
   const [weekDays, setWeekDays] = useState<string[]>([])
   const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
+  const [weekDaysValidation, setWeekDaysValidation] = useState<boolean>(false)
+
+  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+  const onSubmit = (data: any) => {
+   if(watch(weekDays).length === 0) {
+    console.log(useForm())
+    setWeekDaysValidation(true)
+   } else {
+    handleCreatedAd(data).then(() => {
+      props.callBackParent()
+      resetFrom()
+    })
+   }
+  }
+
+  const resetFrom = () => {
+    setWeekDays([])
+    reset({
+      name: '',
+      game: '',
+      yearsPlaying: '',
+      discord: '',
+      hourStart: '',
+      hourEnd: '',
+    })
+  }
+
   useEffect(() => {
     window.sessionStorage.setItem("weekDays", JSON.stringify(weekDays))
+    setWeekDaysValidation(false)
   }, [weekDays])
+
   useEffect(() => {
     window.sessionStorage.setItem("useVoiceChannel", JSON.stringify(useVoiceChannel))
   }, [useVoiceChannel])
+  
   if (props !== undefined && props.games !== null) {
     return (
       <Dialog.Portal>
         <Dialog.Overlay className='bg-black/60 inset-0 fixed'>
           <Dialog.Content className='fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg w-[490px] shadow-lg shadow-black/25'>
             <Dialog.Title className='text-3xl font-black'>Publique um anúncio</Dialog.Title>
-            <form onSubmit={handleCreatedAd} className='mt-8 flex flex-col gap-4'>
+            <form onSubmit={handleSubmit(onSubmit)} className='mt-8 flex flex-col gap-4'>
               <div className='flex flex-col gap-2'>
                 <label className='font-semibold text-start' htmlFor='game'>Qual o game?</label>
-                <select id='game' name='game' className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
+                <select id='game' {...register("game", { required: true })} className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
                   <option disabled defaultValue="">Selecione o game que deseja jogar</option>
                   {props.games.map((game: any) => {
                     return (
@@ -39,16 +68,19 @@ export function AdModal(props: any) {
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='font-semibold text-start' htmlFor='name'>Seu nome (ou nickname)</label>
-                <Input id='name' name='name' placeholder='Como te chamam dentro do game?' />
+                <input className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500' id='name' placeholder='Como te chamam dentro do game?' {...register("name", { required: true })} />
+                {errors?.name?.type === "required" && <p className='text-red-500'>Campo Obrigatório</p>}
               </div>
               <div className='grid gris-cols-2 gap-6'>
                 <div className='flex flex-col gap-2'>
                   <label className='font-semibold text-start' htmlFor='yearsPlaying'>Joga a quantos anos?</label>
-                  <Input id='yearsPlaying' name='yearsPlaying' type='number' placeholder='Tudo bem ser ZERO' />
+                  <input className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500' id='yearsPlaying' {...register("yearsPlaying", { required: true })} type='number' placeholder='Tudo bem ser ZERO' />
+                  {errors?.yearsPlaying?.type === "required" && <p className='text-red-500'>Campo Obrigatório</p>}
                 </div>
                 <div className='flex flex-col gap-2'>
                   <label className='font-semibold text-start' htmlFor='discord'>Qual seu Discord?</label>
-                  <Input id='discord' name='discord' placeholder='usuário#000' />
+                  <input className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500' id='discord' {...register("discord", { required: true })} placeholder='usuário#000' />
+                  {errors?.discord?.type === "required" && <p className='text-red-500'>Campo Obrigatório</p>}
                 </div>
               </div>
               <div className='flex gap-6'>
@@ -105,13 +137,16 @@ export function AdModal(props: any) {
                       S
                     </ToggleGroup.Item >
                   </ToggleGroup.Root>
+                  {weekDaysValidation && <p className='text-red-500'>Campo Obrigatório</p>}
                 </div>
+               
                 <div className='flex flex-col gap-2 flex-1'>
                   <label className='font-semibold text-start' htmlFor='hourStart'>Qual horário do dia?</label>
                   <div className='grid grid-cols-2 gap-2'>
-                    <Input id='hourStart' name='hourStart' type='time' placeholder='De' />
-                    <Input id='hourEnd' name='hourEnd' type='time' placeholder='Até' />
+                    <input className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500' id='hourStart'  type='time' placeholder='De' {...register("hourStart", { required: true })} />
+                    <input className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500' id='hourEnd'  type='time' placeholder='Até' {...register("hourEnd", { required: true })} />
                   </div>
+                  {(errors?.hourStart?.type === "required" || errors?.hourEnd?.type === "required") && <p className='text-red-500'>Campo Obrigatório</p>}
                 </div>
               </div>
               <label className='mt-2 flex items-center gap-2 text-sm'>
@@ -127,10 +162,10 @@ export function AdModal(props: any) {
               </label>
 
               <footer className='mt-4 flex justify-end gap-4'>
-                <Dialog.Close className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>
+                <Dialog.Close onClick={() => resetFrom()} className='bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600'>
                   Cancelar
                 </Dialog.Close>
-                <button onClick={props.callBackParent} className='bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600' type='submit'><GameController size={24} /> Encontrar duo</button>
+                <button className='bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600' type='submit'><GameController size={24} /> Encontrar duo</button>
               </footer>
             </form>
           </Dialog.Content>

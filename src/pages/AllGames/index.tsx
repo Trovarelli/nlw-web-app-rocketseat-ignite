@@ -24,10 +24,7 @@ function AllGames() {
         setGames(allGames.slice(0, gamesPerPage).sort((n1: { _count: { ads: number } }, n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads));
     }, [handleGames, allGames]);
 
-
     const loadMoreGames = async () => {
-        
-
         setPage(page + 1)
         setGamesPerPage(gamesPerPage + 20)
         setLoading(true)
@@ -37,9 +34,8 @@ function AllGames() {
                 setLoading(false)
             }, 200);
         }).catch((err) => alert(err))
-
-
     };
+
     return (
         <div className="flex flex-col justify-center items-center">
             <Link className='d-flex justify-start w-full mt-5' to={"/"}>
