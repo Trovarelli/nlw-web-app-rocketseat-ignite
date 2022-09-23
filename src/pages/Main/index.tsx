@@ -1,6 +1,6 @@
 
 import '../../styles/main.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import logoImg from '../../assets/logo_nlw.svg'
 import { GameBanner } from '../../components/GameBanner'
 import { AdBanner } from '../../components/AdBanner'
@@ -31,9 +31,7 @@ const MutationPlugin: KeenSliderPlugin = (slider) => {
     })
   })
 
-
   const config = { childList: true }
-
   slider.on("created", () => {
     observer.observe(slider.container, config)
   })
@@ -45,7 +43,7 @@ const MutationPlugin: KeenSliderPlugin = (slider) => {
 function Main() {
   const gamesLoading = [1, 2, 3, 4]
   const [games, setGames] = useState<Game[]>([])
-  const [allGames] = useState(JSON.parse(window.sessionStorage.getItem("games")!))
+  const [allGames, setAllGames] = useState<Game[]>(JSON.parse(window.sessionStorage.getItem("games")!))
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [ref, instanceRef] = useKeenSlider<HTMLDivElement>({
@@ -64,19 +62,24 @@ function Main() {
 
   }, [MutationPlugin])
 
-  const handleLoadGames = async (page: number, gamesPerPage: number) => {
-    let gamesAndAds = await loadGames(page, gamesPerPage);
-    gamesAndAds = gamesAndAds.sort((n1: { _count: { ads: number } }, n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads)
-    setGames(gamesAndAds.slice(0, 10))
-  };
+  const handleUpdateGames = () => {
+    handleLoadGames(1, 20)
+  }
 
+  const handleLoadGames = async (page: number, gamesPerPage: number) => {
+    await loadGames(page, gamesPerPage).then(() => {
+      setAllGames(JSON.parse(window.sessionStorage.getItem("games")!))
+    })
+    
+  };
   useEffect(() => {
-    const gamesSession = JSON.parse(window.sessionStorage.getItem("games")!)
-    if (gamesSession !== null) {
-      setGames(JSON.parse(window.sessionStorage.getItem("games")!).slice(0, 10))
+    if (allGames !== null) {
+      console.log('AAAAAAAAL', allGames)
+      setGames(allGames.slice(0, 10))
     } else handleLoadGames(1, 20)
-  }, [])
-  
+  }, [allGames])
+
+
   if (games[0] !== undefined) {
     return (
       <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
@@ -123,7 +126,7 @@ function Main() {
 
         <Dialog.Root>
           <AdBanner />
-          <AdModal games={allGames}/>
+          <AdModal games={allGames} callBackParent={handleUpdateGames} />
         </Dialog.Root>
 
       </div>
