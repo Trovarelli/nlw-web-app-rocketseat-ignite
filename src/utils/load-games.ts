@@ -1,7 +1,6 @@
 import Axios from 'axios'
 
 export const loadGames = async (_page: number, _gamesPerPage: number) => {
-  console.log('CHAMOU')
   const gamesOptions = {
     method: 'GET',
     url: 'https://rawg-video-games-database.p.rapidapi.com/games',
@@ -43,7 +42,7 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
         const gamesStorage = JSON.parse(window.sessionStorage.getItem("games")!)
 
         gamesAndAds.forEach((gameApi: any) => {
-          if (gamesStorage.includes(gameApi.id)) {
+          if (!gamesStorage.some((item: { id: any; }) => gameApi.id ===item.id)) {
             gamesStorage.push(gameApi)
           } else {
             gamesStorage.forEach((gameStorage: {

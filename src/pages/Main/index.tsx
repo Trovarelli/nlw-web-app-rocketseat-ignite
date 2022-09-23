@@ -74,7 +74,6 @@ function Main() {
   };
   useEffect(() => {
     if (allGames !== null) {
-      console.log('AAAAAAAAL', allGames)
       setGames(allGames.slice(0, 10))
     } else handleLoadGames(1, 20)
   }, [allGames])

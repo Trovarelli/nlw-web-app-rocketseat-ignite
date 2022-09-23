@@ -32,9 +32,6 @@ function AllGames() {
         setGamesPerPage(gamesPerPage + 20)
         setLoading(true)
         await handleGames(apiPage + 1, gamesPerPage).then(() => {
-            
-            console.log('ALLGAMES', allGames)
-            console.log('GAMES PER PAGE', gamesPerPage)
             setTimeout(() => {
                 ref.current?.scrollIntoView({ block: "end", behavior: "smooth" });
                 setLoading(false)
