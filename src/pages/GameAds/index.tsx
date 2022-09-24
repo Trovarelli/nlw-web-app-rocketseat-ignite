@@ -110,7 +110,7 @@ function GameAds() {
                 <div className='flex justify-center mb-5'>
                 <Dialog.Root>
                     <AdBanner customClass={'w-[90vw]'}/>
-                    <AdModal games={allGames} callBackParent={handleUpdateGames} />
+                    <AdModal games={allGames} callBackParent={handleUpdateGames} specifyGame={game}/>
                 </Dialog.Root>
                 </div>
             </div>

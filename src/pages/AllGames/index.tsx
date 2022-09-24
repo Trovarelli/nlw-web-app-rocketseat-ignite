@@ -13,6 +13,19 @@ function AllGames() {
     const [allGames, setAllGames] = useState(JSON.parse(window.sessionStorage.getItem("games")!));
     const [page, setPage] = useState(0);
     const [gamesPerPage, setGamesPerPage] = useState(20);
+    const [searchValue, setSearchValue] = useState("");
+    const filteredGames = !!searchValue
+    ? games.filter((game: { title: string; }) => {
+        return game.title.toLowerCase().includes(searchValue.toLowerCase());
+      })
+    : games;
+
+    const handleChange = (event: { target: { value: string; }; }) => {
+        const { value } = event.target;
+
+        setSearchValue(value);
+    };
+
 
     const handleGames = useCallback(async (apiPage: any, gamesPerPage: any) => {
         await loadGames(apiPage, gamesPerPage)
@@ -42,21 +55,28 @@ function AllGames() {
                 <div className='px-3 text-white ml-5 rounded-md py-1 cursor-pointer  flex items-center w-24'><ArrowBendUpLeft size={20} weight="bold" /><span className='ml-1 font-normal text-sm'>Voltar</span></div>
             </Link>
             <div className="mt-8 text-white flex flex-col justify-center items-center">
-                <div className={`w-[90%] text-2xl ${games.length > 0 ? '' : 'opacity-0'}`}>
+                <div className={`w-[90vw] text-2xl ${games.length > 0 ? '' : 'opacity-0'} flex justify-between`}>
                     Aqui você pode encontrar seu jogo favorito!
+                    <input
+                        className="text-input text-black rounded-md py-1 px-3"
+                        type="search"
+                        onChange={handleChange}
+                        value={searchValue}
+                        placeholder="Type your search"
+                    />
                 </div>
-                <div className="mt-6 w-[90%] grid grid-cols-games-grid gap-8">
-                    {games.map((game: { id: Key | null | undefined; bannerUrl: any; title: any; _count: { ads: any; }; }, index: number) => {
+                <div className={`mt-6 w-[90vw] ${filteredGames.length !== 0 ? 'grid grid-cols-games-grid gap-8' : ''}`}>
+                    {filteredGames.length !== 0 ? filteredGames.map((game: { id: Key | null | undefined; bannerUrl: any; title: any; _count: { ads: any; }; }, index: number) => {
                         return (
                             <Link to={`/game/${game.id}`} key={game.id}>
                                 <GameBanner bannerUrl={game.bannerUrl} title={game.title} adsCount={game._count.ads} className={`cursor-pointer h-48`} />
                             </Link>
                         )
-                    })}
+                    }) : <div className="w-[90vw] text-lg text-center">Não foi encontrado nenhum game com o nome: {searchValue} :(</div> }
                 </div>
 
             </div>
-            <button ref={ref} onClick={loadMoreGames} className={`my-8 p-3 rounded flex justify-center items-center bg-violet-500 hover:bg-violet-600 w-[90%] text-white font-bold`}>
+            <button disabled={loading} ref={ref} onClick={loadMoreGames} className={`my-8 p-3 rounded flex justify-center items-center bg-violet-500 hover:bg-violet-600 w-[90%] text-white font-bold`}>
                 {loading ? <div role="status">
                     <svg aria-hidden="true" className="mr-2 w-6 h-6 text-white animate-spin fill-violet-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
