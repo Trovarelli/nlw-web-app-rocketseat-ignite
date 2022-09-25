@@ -44,11 +44,9 @@ function GameAds() {
         setGame(gameFilter)
         setAllAds(game[0].ads);
         setAds(game[0].ads.slice(page, adsPerPage));
-        console.log('ALLL ADS CALL', game[0].ads)
     }, []);
 
     const handleUpdateGames = () => {
-        console.log('UPDATE GAMES')
         handleLoadGames(1, 20)
     }
 
@@ -56,7 +54,6 @@ function GameAds() {
         await loadGames(page, gamesPerPage).then(() => {
             setAllGames(JSON.parse(window.sessionStorage.getItem("games")!))
             handleLoadAds
-            console.log('ALL GAMES', allGames)
         })
     }
 

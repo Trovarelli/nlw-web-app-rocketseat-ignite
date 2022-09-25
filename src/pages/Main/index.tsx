@@ -66,6 +66,8 @@ function Main() {
     handleLoadGames(1, 20)
   }
 
+  console.log(instanceRef)
+
   const handleLoadGames = async (page: number, gamesPerPage: number) => {
     await loadGames(page, gamesPerPage).then(() => {
       setAllGames(JSON.parse(window.sessionStorage.getItem("games")!))
@@ -91,7 +93,7 @@ function Main() {
           {games.map((game, index) => {
             return (
               <Link to={`game/${game.id}`} key={game.id}>
-                <GameBanner bannerUrl={game.bannerUrl} title={game.title} adsCount={game._count.ads} className={`keen-slider__slide number-slide${index + 1}  cursor-pointer`} />
+                <GameBanner bannerUrl={game.bannerUrl} title={game.title} adsCount={game._count.ads} className={`keen-slider__slide number-slide${game.id}  cursor-pointer`} />
               </Link>
             )
           })}

@@ -15,7 +15,6 @@ export function AdModal(props: any) {
   const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
   const onSubmit = (data: any) => {
    if(watch(weekDays).length === 0) {
-    console.log(useForm())
     setWeekDaysValidation(true)
    } else {
     setLoading(true)
@@ -47,8 +46,6 @@ export function AdModal(props: any) {
   useEffect(() => {
     window.sessionStorage.setItem("useVoiceChannel", JSON.stringify(useVoiceChannel))
   }, [useVoiceChannel])
-
-  console.log(props.specifyGame)
   
   if (props !== undefined && props.games !== null) {
     return (

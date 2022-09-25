@@ -61,10 +61,10 @@ export const loadGames = async (_page: number, _gamesPerPage: number) => {
         window.sessionStorage.setItem("games", JSON.stringify(gamesStorageSorted))
 
       } else {
-        window.sessionStorage.setItem("games", JSON.stringify(gamesAndAds))
+        window.sessionStorage.setItem("games", JSON.stringify(gamesAndAds.sort((n1: { _count: { ads: number } }, n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads)))
         window.sessionStorage.setItem("page", JSON.stringify(_page))
       }
-      return gamesAndAds;
+      return gamesAndAds.sort((n1: { _count: { ads: number } }, n2: { _count: { ads: number } }) => n2._count.ads - n1._count.ads)
     }).catch(function (error: any) {
       console.error(error);
     });
