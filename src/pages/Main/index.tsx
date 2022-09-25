@@ -72,12 +72,23 @@ function Main() {
     })
     
   };
+
   useEffect(() => {
     if (allGames !== null) {
       setGames(allGames.slice(0, 10))
     } else handleLoadGames(1, 20)
   }, [allGames])
 
+  const showArrow = () => {
+    if(loaded) {
+      if(currentSlide !==0) {
+        if( instanceRef.current !== null) {
+          if(currentSlide !== instanceRef.current.track.details.slides.length - responsiveCarousel()) return true
+          else return false
+        }
+      } else return true
+    } return false
+  }
 
   if (games[0] !== undefined) {
     return (
@@ -108,19 +119,17 @@ function Main() {
               <div onClick={(e: any) =>
                 e.stopPropagation() || instanceRef.current?.prev()
               }
-                className={`transition ease-in-out delay-200 text-white cursor-pointer ${currentSlide !== 0 ? 'opacity-1' : 'opacity-0'} absolute flex justify-center items-center px-3 w-30 bg-arrow-gradient-left h-[100%] top-1/2 right-[94%]  transform -translate-x-1/2 -translate-y-1/2`}>
+                className={`transition ease-in-out delay-200 text-white cursor-pointer ${currentSlide !== 0 ? '' : 'opacity-0'} absolute flex justify-center items-center px-3 w-30 bg-arrow-gradient-left h-[100%] top-1/2 right-[94%]  transform -translate-x-1/2 -translate-y-1/2`}>
                 <CaretDoubleLeft size={32} weight="bold" />
               </div>
               <div onClick={(e: any) =>
                 e.stopPropagation() || instanceRef.current?.next()
               }
-                className={`transition ease-in-out delay-200 text-white cursor-pointer ${currentSlide !== instanceRef.current.track.details.slides.length - responsiveCarousel() ? 'opacity-1' : 'opacity-0'} absolute flex justify-center items-center px-3 w-30 bg-arrow-gradient-right h-[100%] top-1/2 left-[98%]  transform -translate-x-1/2 -translate-y-1/2`}>
+                className={`transition ease-in-out delay-200 text-white cursor-pointer ${showArrow() ? '' : 'opacity-0'} absolute flex justify-center items-center px-3 w-30 bg-arrow-gradient-right h-[100%] top-1/2 left-[98%]  transform -translate-x-1/2 -translate-y-1/2`}>
                 <CaretDoubleRight size={32} weight="bold" />
               </div>
             </>
           )}
-
-
         </div>
 
         <Dialog.Root>

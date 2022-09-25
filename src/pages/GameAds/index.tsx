@@ -37,12 +37,12 @@ function GameAds() {
         return el.id === Number(id)
     }))
 
-    const handleLoadAds = () => {
+    const handleLoadAds = useCallback(() => {
         const gameFilter = JSON.parse(window.sessionStorage.getItem("games")!).filter((el: any) => {
             return el.id === Number(id)
         })
         setGame(gameFilter)
-    }
+    }, []);
 
     useEffect(() => {
         setAllAds(() => game[0].ads);
@@ -50,6 +50,7 @@ function GameAds() {
     }, [game])
 
     const handleUpdateGames = () => {
+        console.log('CALL 1')
         handleLoadGames(1, 20)
     }
 

@@ -2,7 +2,7 @@ import { Check, GameController } from 'phosphor-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import * as ToggleGroup from '@radix-ui/react-toggle-group'
-import { useState, useEffect, FormEvent } from 'react'
+import { useState, useEffect} from 'react'
 import { handleCreatedAd } from '../utils/createAdd'
 import { useForm } from 'react-hook-form'
 
@@ -10,20 +10,22 @@ export function AdModal(props: any) {
   const [weekDays, setWeekDays] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [useVoiceChannel, setUseVoiceChannel] = useState<boolean>(false)
-  const [weekDaysValidation, setWeekDaysValidation] = useState<boolean>(false)
 
-  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+  const weekValidation = () => {
+    console.log(weekDays.length !== 0 )
+    return weekDays.length !== 0 
+  }
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const onSubmit = (data: any) => {
-   if(watch(weekDays).length === 0) {
-    setWeekDaysValidation(true)
-   } else {
+   
     setLoading(true)
     handleCreatedAd(data).then(() => {
       props.callBackParent()
-      // resetFrom()
+      resetFrom()
       setLoading(false)
     })
-   }
+   
   }
   const resetFrom = () => {
     setWeekDays([])
@@ -36,9 +38,13 @@ export function AdModal(props: any) {
       hourEnd: '',
     })
   }
+  
   useEffect(() => {
     window.sessionStorage.setItem("weekDays", JSON.stringify(weekDays))
-    setWeekDaysValidation(false)
+    if(weekValidation()) {
+      delete errors.weekDays
+    }
+    console.log(errors)
   }, [weekDays])
 
   useEffect(() => {
@@ -54,14 +60,14 @@ export function AdModal(props: any) {
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8 flex flex-col gap-4'>
               <div className='flex flex-col gap-2'>
                 <label className='font-semibold text-start' htmlFor='game'>Qual o game?</label>
-                <select id='game' {...register("game", { required: true })} className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
-                  {props.specifyGame === undefined ? <option disabled selected hidden>Selecione o game que deseja jogar</option> : ''}
+                <select defaultValue={props.specifyGame === undefined ? 'Selecione o game que deseja jogar' : props.specifyGame[0].id } id='game' {...register("game", {required: true})} className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
+                  {props.specifyGame === undefined ? <option disabled hidden>Selecione o game que deseja jogar</option> : ''}
                   
                   {props.specifyGame === undefined ? props.games.map((game: any) => {
                     return (
                       <option key={game.id}  value={game.id}>{game.title}</option>
                     )
-                  }) : <option selected value={props.specifyGame[0].id}>{props.specifyGame[0].title}</option>}
+                  }) : <option value={props.specifyGame[0].id}>{props.specifyGame[0].title}</option>}
                 </select>
               </div>
               <div className='flex flex-col gap-2'>
@@ -84,7 +90,7 @@ export function AdModal(props: any) {
               <div className='flex gap-6'>
                 <div className='flex flex-col gap-2'>
                   <label className='font-semibold text-start' htmlFor='weekDays'>Quando costuma jogar?</label>
-                  <ToggleGroup.Root type='multiple' className='grid grid-cols-4 gap-2' onValueChange={setWeekDays} value={weekDays}>
+                  <ToggleGroup.Root type='multiple' {...register("weekDays", { validate: weekValidation })} className='grid grid-cols-4 gap-2' onValueChange={setWeekDays} value={weekDays}>
                     <ToggleGroup.Item
                       value='0'
                       className={`w-8 h-8 rounded ${weekDays.includes('0') ? 'bg-violet-500' : 'bg-zinc-900'}`}
@@ -135,7 +141,7 @@ export function AdModal(props: any) {
                       S
                     </ToggleGroup.Item >
                   </ToggleGroup.Root>
-                  {weekDaysValidation && <p className='text-red-500'>Campo Obrigatório</p>}
+                  {errors.weekDays && errors?.weekDays?.type === 'validate' && <p className='text-red-500'>Campo Obrigatório</p>}
                 </div>
                
                 <div className='flex flex-col gap-2 flex-1'>
