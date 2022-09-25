@@ -66,8 +66,6 @@ function Main() {
     handleLoadGames(1, 20)
   }
 
-  console.log(instanceRef)
-
   const handleLoadGames = async (page: number, gamesPerPage: number) => {
     await loadGames(page, gamesPerPage).then(() => {
       setAllGames(JSON.parse(window.sessionStorage.getItem("games")!))

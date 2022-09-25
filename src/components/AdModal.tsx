@@ -20,12 +20,11 @@ export function AdModal(props: any) {
     setLoading(true)
     handleCreatedAd(data).then(() => {
       props.callBackParent()
-      resetFrom()
+      // resetFrom()
       setLoading(false)
     })
    }
   }
-
   const resetFrom = () => {
     setWeekDays([])
     reset({
@@ -37,7 +36,6 @@ export function AdModal(props: any) {
       hourEnd: '',
     })
   }
-
   useEffect(() => {
     window.sessionStorage.setItem("weekDays", JSON.stringify(weekDays))
     setWeekDaysValidation(false)
@@ -56,13 +54,14 @@ export function AdModal(props: any) {
             <form onSubmit={handleSubmit(onSubmit)} className='mt-8 flex flex-col gap-4'>
               <div className='flex flex-col gap-2'>
                 <label className='font-semibold text-start' htmlFor='game'>Qual o game?</label>
-                <select id='game' disabled={props.specifyGame !== undefined} {...register("game", { required: true })} className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
-                  <option disabled defaultValue="">Selecione o game que deseja jogar</option>
+                <select id='game' {...register("game", { required: true })} className='bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500'>
+                  {props.specifyGame === undefined ? <option disabled selected hidden>Selecione o game que deseja jogar</option> : ''}
+                  
                   {props.specifyGame === undefined ? props.games.map((game: any) => {
                     return (
                       <option key={game.id}  value={game.id}>{game.title}</option>
                     )
-                  }) : <option key={props.specifyGame[0].id}  value={props.specifyGame[0].id}>{props.specifyGame[0].title}</option>}
+                  }) : <option selected value={props.specifyGame[0].id}>{props.specifyGame[0].title}</option>}
                 </select>
               </div>
               <div className='flex flex-col gap-2'>

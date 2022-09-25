@@ -37,14 +37,17 @@ function GameAds() {
         return el.id === Number(id)
     }))
 
-    const handleLoadAds = useCallback(async (page: any, adsPerPage: any) => {
+    const handleLoadAds = () => {
         const gameFilter = JSON.parse(window.sessionStorage.getItem("games")!).filter((el: any) => {
             return el.id === Number(id)
         })
         setGame(gameFilter)
-        setAllAds(game[0].ads);
-        setAds(game[0].ads.slice(page, adsPerPage));
-    }, []);
+    }
+
+    useEffect(() => {
+        setAllAds(() => game[0].ads);
+        setAds(() => game[0].ads.slice(page, adsPerPage));
+    }, [game])
 
     const handleUpdateGames = () => {
         handleLoadGames(1, 20)
@@ -53,12 +56,12 @@ function GameAds() {
     const handleLoadGames = async (page: number, gamesPerPage: number) => {
         await loadGames(page, gamesPerPage).then(() => {
             setAllGames(JSON.parse(window.sessionStorage.getItem("games")!))
-            handleLoadAds
+            handleLoadAds()
         })
     }
 
     useEffect(() => {
-        handleLoadAds(0, adsPerPage);
+        handleLoadAds();
     }, [handleLoadAds, adsPerPage, allGames]);
 
     const loadMoreAds = () => {
