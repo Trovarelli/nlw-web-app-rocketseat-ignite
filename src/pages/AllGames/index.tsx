@@ -15,10 +15,10 @@ function AllGames() {
     const [gamesPerPage, setGamesPerPage] = useState(20);
     const [searchValue, setSearchValue] = useState("");
     const filteredGames = !!searchValue
-    ? games.filter((game: { title: string; }) => {
-        return game.title.toLowerCase().includes(searchValue.toLowerCase());
-      })
-    : games;
+        ? games.filter((game: { title: string; }) => {
+            return game.title.toLowerCase().includes(searchValue.toLowerCase());
+        })
+        : games;
 
     const handleChange = (event: { target: { value: string; }; }) => {
         const { value } = event.target;
@@ -57,15 +57,15 @@ function AllGames() {
             <div className="mt-8 text-white flex flex-col justify-center items-center">
                 <div className={`w-[90vw] text-2xl ${games.length > 0 ? '' : 'opacity-0'} flex justify-between`}>
                     Aqui você pode encontrar seu jogo favorito!
-                    <div>
+                    <div className="text-base">
                         <label className="mr-3">Nome do jogo:</label>
-                    <input
-                        className="text-input text-black rounded-md py-1 px-3"
-                        type="search"
-                        onChange={handleChange}
-                        value={searchValue}
-                        placeholder="Digite para procurar!"
-                    />
+                        <input
+                            className="text-input text-black rounded-md py-1 px-3"
+                            type="search"
+                            onChange={handleChange}
+                            value={searchValue}
+                            placeholder="Digite para procurar!"
+                        />
                     </div>
                 </div>
                 <div className={`mt-6 w-[90vw] ${filteredGames.length !== 0 ? 'grid grid-cols-games-grid gap-8' : ''}`}>
@@ -75,7 +75,7 @@ function AllGames() {
                                 <GameBanner bannerUrl={game.bannerUrl} title={game.title} adsCount={game._count.ads} className={`cursor-pointer h-48`} />
                             </Link>
                         )
-                    }) : <div className="w-[90vw] text-lg text-center">Não foi encontrado nenhum game com o nome: {searchValue} :(</div> }
+                    }) : <div className="w-[90vw] text-lg text-center">Não foi encontrado nenhum game com o nome: {searchValue} :(</div>}
                 </div>
 
             </div>

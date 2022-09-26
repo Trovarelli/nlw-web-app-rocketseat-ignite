@@ -120,7 +120,7 @@ function GameAds() {
                                     type="search"
                                     onChange={handleChange}
                                     value={searchValue}
-                                    placeholder="Digite o para encontrar!"
+                                    placeholder="Digite para encontrar!"
                                 />
                             </div>
                         </div> : <div className='flex h-full justify-center items-center text-9xl'>:(</div>}
