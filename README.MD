@@ -20,9 +20,7 @@
 
 
 
-## 🚀 NextLevel
-
-MELHORIAS E MUDANÇAS
+## 🚀 Melhorias e Mudanças
 
 - Integração com a API da RAWG Video Games Database
 - Hospedagem Web na Netifly
